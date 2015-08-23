@@ -942,15 +942,17 @@
 					var self = $(this),
 					    data = self.data("roundabout");
 
-					callback = callback || data.autoplayCallback || function() {};
+					if(data.autoplay) {
+						callback = callback || data.autoplayCallback || function() {};
 
-					clearInterval(data.autoplayInterval);
-					data.autoplayInterval = setInterval(function() {
-						methods.animateToNextChild.apply(self, [callback]);
-					}, data.autoplayDuration);
-					data.autoplayIsRunning = true;
+						clearInterval(data.autoplayInterval);
+						data.autoplayInterval = setInterval(function() {
+							methods.animateToNextChild.apply(self, [callback]);
+						}, data.autoplayDuration);
+						data.autoplayIsRunning = true;
 					
-					self.trigger("autoplayStart");
+						self.trigger("autoplayStart");
+					}
 				});
 		},
 
@@ -985,8 +987,10 @@
 					callback = callback || data.autoplayCallback || function() {};
 
 					if (!methods.isAutoplaying.apply($(this))) {
+						data.autoplay = true;
 						methods.startAutoplay.apply($(this), [callback]);
 					} else {
+						data.autoplay = false;
 						methods.stopAutoplay.apply($(this), [callback]);
 					}
 				});
